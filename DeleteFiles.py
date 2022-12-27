@@ -55,6 +55,8 @@ for element in files:
 
 #write a lines to separate the times that the program works 
 log.write('-'*15)
-
 log.close()
+
+
+
 
