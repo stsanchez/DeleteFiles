@@ -27,31 +27,36 @@ files = os.listdir(path)
 #Create a log file for check the information
 log = open("log.txt", "a")
 
+
 #Iterate the list for start to compare
 for element in files:
+    try:
+        #Join the path with the name of element
+        file = path + os.sep + element
 
-    #Join the path with the name of element
-    file = path + os.sep + element
+        #Get the stat of the file
+        estado = os.stat(file)
 
-    #Get the stat of the file
-    estado = os.stat(file)
+        #Get the last modified date
+        modified_date = datetime.fromtimestamp(estado.st_mtime)   
 
-    #Get the last modified date
-    modified_date = datetime.fromtimestamp(estado.st_mtime)   
+        #Set the file las modified date format
+        modified_date = modified_date.strftime(date_format)
 
-    #Set the file las modified date format
-    modified_date = modified_date.strftime(date_format)
+        #Compare if is equal or not equal to delete.
+        if modified_date == date_time:
+            #Write a line in the log with the file information
+            log.write (file+ '-->' + modified_date + '||' + date_time + ':Equal'+  os.linesep)
 
-    #Compare if is equal or not equal to delete.
-    if modified_date == date_time:
-        #Write a line in the log with the file information
-        log.write (file+ '-->' + modified_date + '||' + date_time + ':Equal'+  os.linesep)
+        elif modified_date != date_time:
+            #Write a line in the log with the file information
+            log.write (file+ '-->' + modified_date + '||' + date_time + ': not equal. Deleted'+  os.linesep)
+            #Delete the file because is not equal
+            shutil.rmtree(file)
+    except:
+        log.write('Error: '+file)
 
-    elif modified_date != date_time:
-        #Write a line in the log with the file information
-        log.write (file+ '-->' + modified_date + '||' + date_time + ': not equal. Deleted'+  os.linesep)
-        #Delete the file because is not equal
-        shutil.rmtree(file)
+
 
 #write a lines to separate the times that the program works 
 log.write('-'*15)
